@@ -1,17 +1,22 @@
 package com.marcos.concurrenttranslator
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.marcos.concurrenttranslator.data.model.Idioma
 import com.marcos.concurrenttranslator.databinding.ActivityMainBinding
+import com.marcos.concurrenttranslator.ui.EstadoTraducao
+import com.marcos.concurrenttranslator.ui.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: MainViewModel by viewModels()
 
     private val idiomas = listOf(
         Idioma("Português", "pt"),
@@ -31,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         configurarBarrasDoSistema()
         configurarSpinners()
+        configurarObservadores()
         configurarCliqueTraduzir()
     }
 
@@ -63,18 +69,47 @@ class MainActivity : AppCompatActivity() {
         binding.spinnerDestino.setSelection(1)
     }
 
+    private fun configurarObservadores() {
+        viewModel.estado.observe(this) { estado ->
+            when (estado) {
+                is EstadoTraducao.Inicial -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.btnTraduzir.isEnabled = true
+                    binding.textResultado.text = "A tradução aparecerá aqui."
+                }
+
+                is EstadoTraducao.Carregando -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.btnTraduzir.isEnabled = false
+                    binding.textResultado.text = "Traduzindo..."
+                }
+
+                is EstadoTraducao.Sucesso -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.btnTraduzir.isEnabled = true
+                    binding.textResultado.text = estado.textoTraduzido
+                }
+
+                is EstadoTraducao.Erro -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.btnTraduzir.isEnabled = true
+                    binding.textResultado.text = estado.mensagem
+                }
+            }
+        }
+    }
+
     private fun configurarCliqueTraduzir() {
         binding.btnTraduzir.setOnClickListener {
             val texto = binding.editTexto.text.toString()
             val idiomaOrigem = binding.spinnerOrigem.selectedItem as Idioma
             val idiomaDestino = binding.spinnerDestino.selectedItem as Idioma
 
-            binding.textResultado.text = """
-                Texto informado: $texto
-                
-                Idioma de origem: ${idiomaOrigem.nome}
-                Idioma de destino: ${idiomaDestino.nome}
-            """.trimIndent()
+            viewModel.traduzir(
+                texto = texto,
+                idiomaOrigem = idiomaOrigem.codigo,
+                idiomaDestino = idiomaDestino.codigo
+            )
         }
     }
 }
