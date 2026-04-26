@@ -11,16 +11,28 @@ class TranslateUseCase(
         idiomaOrigem: String,
         idiomaDestino: String
     ): Result<String> {
-        if (texto.isBlank()) {
-            return Result.failure(Exception("Digite um texto para traduzir."))
+        val textoFormatado = texto.trim()
+
+        if (textoFormatado.isBlank()) {
+            return Result.failure(
+                Exception("Digite um texto para traduzir.")
+            )
+        }
+
+        if (textoFormatado.length > 15000) {
+            return Result.failure(
+                Exception("O texto ultrapassa o limite de 15.000 caracteres.")
+            )
         }
 
         if (idiomaOrigem == idiomaDestino) {
-            return Result.failure(Exception("Escolha idiomas diferentes."))
+            return Result.failure(
+                Exception("Escolha idiomas diferentes.")
+            )
         }
 
         return repository.traduzir(
-            texto = texto.trim(),
+            texto = textoFormatado,
             idiomaOrigem = idiomaOrigem,
             idiomaDestino = idiomaDestino
         )
