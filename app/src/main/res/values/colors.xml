@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="primary">#2563EB</color>
+    <color name="primary_dark">#1E40AF</color>
+    <color name="primary_light">#DBEAFE</color>
+
+    <color name="background">#FFFFFF</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_soft">#F8FAFC</color>
+
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_label">#374151</color>
+
+    <color name="border">#E5E7EB</color>
+    <color name="spinner_border">#CBD5E1</color>
+    <color name="spinner_dropdown_background">#F9FBFF</color>
+
+    <color name="success">#059669</color>
+    <color name="white">#FFFFFF</color>
 </resources>

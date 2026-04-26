@@ -1,11 +1,14 @@
 package com.marcos.concurrenttranslator
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.os.Bundle
-import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.marcos.concurrenttranslator.data.model.Idioma
@@ -36,11 +39,16 @@ class MainActivity : AppCompatActivity() {
 
         configurarBarrasDoSistema()
         configurarSpinners()
+        configurarCliqueInverterIdiomas()
+        configurarCliqueColarTexto()
+        configurarCliqueCopiarResultado()
         configurarObservadores()
         configurarCliqueTraduzir()
     }
 
     private fun configurarBarrasDoSistema() {
+        WindowCompat.getInsetsController(window, binding.root).isAppearanceLightStatusBars = true
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.setPadding(
@@ -56,11 +64,11 @@ class MainActivity : AppCompatActivity() {
     private fun configurarSpinners() {
         val adapter = ArrayAdapter(
             this,
-            android.R.layout.simple_spinner_item,
+            R.layout.item_spinner_selected,
             idiomas
         )
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
 
         binding.spinnerOrigem.adapter = adapter
         binding.spinnerDestino.adapter = adapter
@@ -73,29 +81,78 @@ class MainActivity : AppCompatActivity() {
         viewModel.estado.observe(this) { estado ->
             when (estado) {
                 is EstadoTraducao.Inicial -> {
-                    binding.progressBar.visibility = View.GONE
                     binding.btnTraduzir.isEnabled = true
-                    binding.textResultado.text = "A tradução aparecerá aqui."
+                    binding.btnTraduzir.text = getString(R.string.translate_button)
+                    binding.textResultado.text = getString(R.string.result_placeholder)
                 }
 
                 is EstadoTraducao.Carregando -> {
-                    binding.progressBar.visibility = View.VISIBLE
                     binding.btnTraduzir.isEnabled = false
-                    binding.textResultado.text = "Traduzindo..."
+                    binding.btnTraduzir.text = getString(R.string.translate_button)
+                    binding.textResultado.text = getString(R.string.result_loading)
                 }
 
                 is EstadoTraducao.Sucesso -> {
-                    binding.progressBar.visibility = View.GONE
                     binding.btnTraduzir.isEnabled = true
+                    binding.btnTraduzir.text = getString(R.string.translate_button)
                     binding.textResultado.text = estado.textoTraduzido
                 }
 
                 is EstadoTraducao.Erro -> {
-                    binding.progressBar.visibility = View.GONE
                     binding.btnTraduzir.isEnabled = true
+                    binding.btnTraduzir.text = getString(R.string.translate_button)
                     binding.textResultado.text = estado.mensagem
                 }
             }
+        }
+    }
+
+    private fun configurarCliqueInverterIdiomas() {
+        binding.btnInverterIdiomas.setOnClickListener {
+            val origemSelecionada = binding.spinnerOrigem.selectedItemPosition
+            val destinoSelecionado = binding.spinnerDestino.selectedItemPosition
+
+            binding.spinnerOrigem.setSelection(destinoSelecionado)
+            binding.spinnerDestino.setSelection(origemSelecionada)
+        }
+    }
+
+    private fun configurarCliqueColarTexto() {
+        binding.btnColarTexto.setOnClickListener {
+            val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = clipboard.primaryClip
+            val textoColado = if (clip != null && clip.itemCount > 0) {
+                clip.getItemAt(0).coerceToText(this).toString().trim()
+            } else {
+                ""
+            }
+
+            if (textoColado.isBlank()) {
+                Toast.makeText(this, getString(R.string.clipboard_empty_message), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            binding.editTexto.setText(textoColado)
+            binding.editTexto.setSelection(textoColado.length)
+        }
+    }
+
+    private fun configurarCliqueCopiarResultado() {
+        binding.btnCopiarResultado.setOnClickListener {
+            val textoResultado = binding.textResultado.text.toString().trim()
+            val semResultado = textoResultado.isBlank() ||
+                textoResultado == getString(R.string.result_placeholder) ||
+                textoResultado == getString(R.string.result_loading)
+
+            if (semResultado) {
+                Toast.makeText(this, getString(R.string.result_empty_copy_message), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("resultado_traducao", textoResultado)
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(this, getString(R.string.result_copied_message), Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">ConcurrentTranslator</string>
+    <string name="app_title">Seu tradutor online</string>
+    <string name="app_subtitle">Traduza textos rapidamente usando tradução concorrente</string>
+    <string name="input_label">Texto para tradução</string>
+    <string name="input_hint">Digite uma palavra ou frase</string>
+    <string name="source_language">De:</string>
+    <string name="target_language">Para:</string>
+    <string name="translate_button">Traduzir agora</string>
+    <string name="swap_languages_content_description">Inverter idiomas</string>
+    <string name="paste_text_content_description">Colar texto</string>
+    <string name="clipboard_empty_message">Nenhum texto para colar</string>
+    <string name="result_title">Resultado</string>
+    <string name="copy_result_content_description">Copiar resultado</string>
+    <string name="result_copied_message">Resultado copiado</string>
+    <string name="result_empty_copy_message">Nenhum resultado para copiar</string>
+    <string name="result_placeholder">A tradução aparecerá aqui.</string>
+    <string name="result_loading">Traduzindo...</string>
 </resources>

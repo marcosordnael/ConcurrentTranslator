@@ -1,136 +1,244 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA"
+    android:background="@color/background"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textTitulo"
+
+
+        <LinearLayout
+            android:id="@+id/cardTradutor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ConcurrentTranslator"
-            android:textColor="#1F2937"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginTop="24dp" />
+            android:background="@drawable/bg_card"
+            android:elevation="4dp"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-        <TextView
-            android:id="@+id/textSubtitulo"
+            <TextView
+                android:id="@+id/textTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/app_title"
+                android:textColor="@color/text_primary"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textSubtitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/app_subtitle"
+                android:textColor="@color/text_secondary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/input_label"
+                android:textColor="@color/text_label"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_marginTop="8dp">
+
+                <EditText
+                    android:id="@+id/editTexto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_input"
+                    android:gravity="top"
+                    android:hint="@string/input_hint"
+                    android:inputType="textMultiLine"
+                    android:minLines="4"
+                    android:paddingStart="14dp"
+                    android:paddingTop="14dp"
+                    android:paddingEnd="56dp"
+                    android:paddingBottom="14dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/btnColarTexto"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/bg_icon_button"
+                    android:contentDescription="@string/paste_text_content_description"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_paste"
+                    app:tint="@color/primary" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/source_language"
+                        android:textColor="@color/text_label"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spinnerOrigem"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_spinner_field"
+                        android:dropDownVerticalOffset="52dp"
+                        android:dropDownWidth="match_parent"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:popupBackground="@drawable/bg_spinner_dropdown"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnInverterIdiomas"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="26dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_icon_button"
+                    android:contentDescription="@string/swap_languages_content_description"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_swap_horiz"
+                    app:tint="@color/primary" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/target_language"
+                        android:textColor="@color/text_label"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spinnerDestino"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/bg_spinner_field"
+                        android:dropDownVerticalOffset="52dp"
+                        android:dropDownWidth="match_parent"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:popupBackground="@drawable/bg_spinner_dropdown"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnTraduzir"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/bg_button_primary"
+                app:backgroundTint="@null"
+                android:text="@string/translate_button"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cardResultado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Traduza textos rapidamente usando tradução concorrente"
-            android:textColor="#6B7280"
-            android:textSize="15sp"
-            android:gravity="center"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="28dp" />
+            android:layout_marginTop="18dp"
+            android:elevation="3dp"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Texto para tradução"
-            android:textColor="#374151"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
+            <TextView
+                android:id="@+id/textResultadoTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/result_title"
+                android:textColor="@color/text_label"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/editTexto"
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:background="#FFFFFF"
-            android:gravity="top"
-            android:hint="Digite uma palavra ou frase"
-            android:inputType="textMultiLine"
-            android:minLines="4"
-            android:padding="14dp"
-            android:textColor="#111827"
-            android:textColorHint="#9CA3AF"
-            android:textSize="16sp" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Idioma de origem"
-            android:textColor="#374151"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="8dp" />
+                <TextView
+                    android:id="@+id/textResultado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="100dp"
+                    android:background="@drawable/bg_input"
+                    android:paddingStart="14dp"
+                    android:paddingTop="14dp"
+                    android:paddingEnd="56dp"
+                    android:paddingBottom="14dp"
+                    android:text="@string/result_placeholder"
+                    android:textColor="@color/text_primary"
+                    android:textSize="17sp" />
 
-        <Spinner
-            android:id="@+id/spinnerOrigem"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="#FFFFFF"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp" />
+                <ImageButton
+                    android:id="@+id/btnCopiarResultado"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/bg_icon_button"
+                    android:contentDescription="@string/copy_result_content_description"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_copy"
+                    app:tint="@color/primary" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Idioma de destino"
-            android:textColor="#374151"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp" />
+            </FrameLayout>
 
-        <Spinner
-            android:id="@+id/spinnerDestino"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="#FFFFFF"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp" />
-
-        <Button
-            android:id="@+id/btnTraduzir"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:text="Traduzir"
-            android:textAllCaps="false"
-            android:textSize="16sp"
-            android:layout_marginTop="24dp" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:layout_marginTop="20dp" />
-
-        <TextView
-            android:id="@+id/textResultadoTitulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Resultado"
-            android:textColor="#374151"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginTop="28dp"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:id="@+id/textResultado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="100dp"
-            android:background="#FFFFFF"
-            android:padding="14dp"
-            android:text="A tradução aparecerá aqui."
-            android:textColor="#111827"
-            android:textSize="17sp" />
+        </LinearLayout>
 
     </LinearLayout>
 

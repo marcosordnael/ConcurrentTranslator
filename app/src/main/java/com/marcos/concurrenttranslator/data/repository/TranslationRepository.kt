@@ -1,8 +1,8 @@
 package com.marcos.concurrenttranslator.data.repository
 
+import android.util.Log
 import com.marcos.concurrenttranslator.BuildConfig
 import com.marcos.concurrenttranslator.data.api.TranslationApi
-import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -10,17 +10,20 @@ class TranslationRepository(
     private val api: TranslationApi
 ) {
 
+    companion object {
+        private const val TAG = "TranslationRepository"
+    }
+
     suspend fun traduzir(
         texto: String,
         idiomaOrigem: String,
         idiomaDestino: String
     ): Result<String> {
         return try {
-            if (BuildConfig.RAPID_API_KEY.isBlank()) {
-                return Result.failure(
-                    Exception("A chave da API não foi configurada.")
-                )
-            }
+            Log.d(
+                TAG,
+                "Iniciando traducao. origem=$idiomaOrigem destino=$idiomaDestino texto='${texto.take(80)}'"
+            )
 
             val response = api.traduzir(
                 apiKey = BuildConfig.RAPID_API_KEY,
@@ -30,43 +33,29 @@ class TranslationRepository(
                 texto = texto
             )
 
-            val textoTraduzido = response.data?.translatedText
+            Log.d(
+                TAG,
+                "Resposta API recebida. status=${response.status} translatedText=${response.data?.translatedText} translated_text=${response.data?.translatedTextSnakeCase}"
+            )
+
+            val textoTraduzido = response.data?.obterTextoTraduzido()
 
             if (textoTraduzido.isNullOrBlank()) {
-                Result.failure(
-                    Exception("A tradução não retornou resultado.")
-                )
+                Log.w(TAG, "Resposta sem texto traduzido. Payload=$response")
+                Result.failure(Exception("A traducao nao retornou resultado."))
             } else {
+                Log.d(TAG, "Traducao concluida com sucesso: '$textoTraduzido'")
                 Result.success(textoTraduzido)
             }
         } catch (exception: UnknownHostException) {
-            Result.failure(
-                Exception("Sem conexão com a internet. Verifique sua rede.")
-            )
+            Log.e(TAG, "Sem conexao com a internet.", exception)
+            Result.failure(Exception("Sem conexao com a internet. Verifique sua rede."))
         } catch (exception: SocketTimeoutException) {
-            Result.failure(
-                Exception("A tradução demorou demais para responder. Tente novamente.")
-            )
-        } catch (exception: HttpException) {
-            Result.failure(
-                Exception(tratarErroHttp(exception.code()))
-            )
+            Log.e(TAG, "Timeout na chamada de traducao.", exception)
+            Result.failure(Exception("A traducao demorou demais para responder. Tente novamente."))
         } catch (exception: Exception) {
-            Result.failure(
-                Exception("Não foi possível realizar a tradução no momento.")
-            )
-        }
-    }
-
-    private fun tratarErroHttp(codigo: Int): String {
-        return when (codigo) {
-            400 -> "A solicitação enviada para tradução é inválida."
-            401 -> "A chave da API não foi autorizada."
-            403 -> "Acesso negado à API de tradução."
-            404 -> "Serviço de tradução não encontrado."
-            429 -> "Limite de requisições da API atingido. Tente novamente mais tarde."
-            in 500..599 -> "O serviço de tradução está indisponível no momento."
-            else -> "Erro ao se comunicar com a API de tradução."
+            Log.e(TAG, "Falha inesperada na traducao.", exception)
+            Result.failure(Exception("Nao foi possivel realizar a traducao no momento."))
         }
     }
 }
